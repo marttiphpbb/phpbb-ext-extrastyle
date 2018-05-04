@@ -17,11 +17,16 @@ class main_info
 			'filename'	=> '\marttiphpbb\extrastyle\acp\main_module',
 			'title'		=> cnst::L_ACP,
 			'modes'		=> [			
-				'select_forum'	=> [
-					'title'	=> cnst::L_ACP . '_SELECT',
+				'sheets'	=> [
+					'title'	=> cnst::L_ACP . '_SHEETS',
 					'auth'	=> 'ext_marttiphpbb/extrastyle && acl_a_board',
 					'cat'	=> [cnst::L_ACP],
-				],			
+				],
+				'edit'	=> [
+					'title'	=> cnst::L_ACP . '_EDIT',
+					'auth'	=> 'ext_marttiphpbb/extrastyle && acl_a_board',
+					'cat'	=> [cnst::L_ACP],
+				],								
 			],
 		];
 	}

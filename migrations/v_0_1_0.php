@@ -7,13 +7,14 @@
 
 namespace marttiphpbb\extrastyle\migrations;
 use marttiphpbb\extrastyle\util\cnst;
+use marttiphpbb\extrastyle\service\store;
 
 class v_0_1_0 extends \phpbb\db\migration\migration
 {
 	public function update_data()
 	{
 		return [
-			['config.add', [cnst::CONFIG_EXTRASTYLE_ID, 0]],
+			['config_text.add', [store::KEY, serialize([])]],
 
 			['module.add', [
 				'acp',
@@ -27,32 +28,11 @@ class v_0_1_0 extends \phpbb\db\migration\migration
 				[
 					'module_basename'	=> '\marttiphpbb\extrastyle\acp\main_module',
 					'modes'				=> [
-						'select_forum',
+						'files',
+						'edit',
 					],
 				],
-			]],
-		];
-	}
-
-	public function update_schema()
-	{
-		return [
-			'add_columns'        => [
-				$this->table_prefix . 'topics' => [
-					cnst::FROM_FORUM_ID_COLUMN  => ['UINT', NULL],
-				],
-			],
-		];
-	}
-
-	public function revert_schema()
-	{
-		return [
-			'drop_columns'        => [
-				$this->table_prefix . 'topics'	=> [
-					cnst::FROM_FORUM_ID_COLUMN,
-				],
-			],
+			]],			
 		];
 	}
 }

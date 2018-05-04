@@ -170,15 +170,15 @@ class mcp_forum_listener implements EventSubscriberInterface
 			trigger_error('NO_TOPIC_SELECTED');
 		}
 
-		if ($s_)
+		if ($s)
 		{
-			$this->($topic_ids);
+			$this->archive($topic_ids);
 		}
 
 		$this->restore($topic_ids);
 	}
 
-	private function (array $topic_ids)
+	private function archive(array $topic_ids)
 	{
 		if ($this->request->variable('confirm', ''))
 		{

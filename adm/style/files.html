@@ -1,0 +1,54 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_ACP_MARTTIPHPBB_EXTRASTYLE_FILES}</h1>
+<p>{FILES_EXPLAIN}</p>
+<!-- IF ACP_MARTTIPHPBB_EXTRASTYLE_INCLUDEPHP_WARNING -->
+<div class="errorbox"><p>{ACP_MARTTIPHPBB_EXTRASTYLE_INCLUDEPHP_WARNING}</p></div>
+<!-- ENDIF -->
+<form method="post" action="{U_ACTION}">
+	<fieldset>
+		<table class="table1 zebra-table">
+		<thead>
+		<tr>
+			<th>{L_ACP_MARTTIPHPBB_EXTRASTYLE_FILE_NAME}</th>
+			<th>{L_ACP_MARTTIPHPBB_EXTRASTYLE_FILE_SIZE}</th>
+			<th>{L_ACP_MARTTIPHPBB_EXTRASTYLE_FILE_COMMENT}</th>
+			<th>{L_ACP_MARTTIPHPBB_EXTRASTYLE_DELETE}</th>
+		</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN files -->
+			<tr>
+				<td><a href="{files.U_EDIT}">{files.NAME}</a><!-- IF files.S_IS_EVENT --> {L_ACP_MARTTIPHPBB_EXTRASTYLE_EVENT_FILE_INDICATOR}<!-- ENDIF --></td>
+				<td>{files.SIZE}</td>
+				<td>{files.COMMENT}</td>
+				<td>
+				<!-- IF not files.S_IS_EVENT -->
+					<input class="button2" type="submit" name="delete[{files.NAME}]" value="x" title="{files.DELETE_FILE_NAME}"/>
+				<!-- ENDIF -->
+				</td>
+			</tr>
+		<!-- BEGINELSE -->
+			<tr class="row3">
+				<td colspan="2">{L_ACP_NO_ITEMS}</td>
+			</tr>
+		<!-- END files -->
+		</tbody>
+		</table>
+		<p>
+		<dl>
+			<input type="text" class="text medium" id="new_file" name="new_file" value="{NEW_FILE}" maxlength="100" />
+			<input class="button2" type="submit" id="create" name="create" value="{L_ACP_MARTTIPHPBB_EXTRASTYLE_CREATE_FILE}" />
+ 		</dl>
+		</p>
+		<!-- IF U_MARTTIPHPBB_EXTRASTYLE_HIDE_EVENTS -->
+		<a href="{U_MARTTIPHPBB_EXTRASTYLE_HIDE_EVENTS}">{L_ACP_MARTTIPHPBB_EXTRASTYLE_HIDE_TEMPLATE_EVENTS_LOCATIONS}</a>
+		<!-- ELSE -->
+		<a href="{U_MARTTIPHPBB_EXTRASTYLE_SHOW_EVENTS}">{L_ACP_MARTTIPHPBB_EXTRASTYLE_SHOW_TEMPLATE_EVENTS_LOCATIONS}</a>
+		<!-- ENDIF -->
+	</fieldset>
+{S_FORM_TOKEN}
+</form>
+
+<!-- INCLUDEJS extrastyle.js -->
+<!-- INCLUDE overall_footer.html -->
