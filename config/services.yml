@@ -1,0 +1,24 @@
+services:
+    marttiphpbb.extrastyle.listener:
+        class: marttiphpbb\extrastyle\event\main_listener
+        tags:
+            - { name: event.listener }
+
+    marttiphpbb.extrastyle.mcp_forum_listener:
+        class: marttiphpbb\extrastyle\event\mcp_forum_listener
+        arguments:
+            - '@dbal.conn'
+            - '%tables.topics%'
+            - '%tables.forums%'
+            - '@config'
+            - '@auth'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@log'
+            - '@user'
+        tags:
+            - { name: event.listener }
+           
