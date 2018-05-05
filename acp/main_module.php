@@ -16,7 +16,7 @@ class main_module
 
 	function main($id, $mode)
 	{
-		global $phpbb_container, $phpbb_root_path, $phpbb_admin_path, $phpEx;
+		global $phpbb_container;
 
 		$request = $phpbb_container->get('request');
 		$template = $phpbb_container->get('template');
@@ -25,9 +25,7 @@ class main_module
 		$language = $phpbb_container->get('language');
 		$user = $phpbb_container->get('user');
 
-		$phpbb_root_path = $phpbb_container->getParameter('core.root_path');
-		$phpbb_admin_path = $phpbb_container->getParameter('core.admin_path');
-		$php_ext= $phpbb_container->getParameter('core.php_ext');
+//		$phpbb_root_path = $phpbb_container->getParameter('core.root_path');
 	
 		$language->add_lang('acp', cnst::FOLDER);
 		add_form_key(cnst::FOLDER);
@@ -45,10 +43,7 @@ class main_module
 				$file =	$request->variable('filename', '', true);
 				$editor_rows = max(5, min(999, $request->variable('editor_rows', 8)));
 
-				$save = $request->is_set_post('save');
-				$save_purge_cache = $request->is_set_post('save_purge_cache');
-
-				if ($save || $save_purge_cache)
+				if ($request->is_set_post('save'))
 				{
 
 					$data	= utf8_normalize_nfc($request->variable('file_data', '', true));
@@ -88,37 +83,27 @@ class main_module
 				}
 				else
 				{
-					reset($filenames);
-					$file = $file == '' ? current($filenames) : $file;
+//					reset($filenames);
+//					$file = $file == '' ? current($filenames) : $file;
 				}
 
 //				$data = $extrastyle_directory->file_get_contents($file);
 
-				$data = [];
+				$sheets = [];
 
-				$options = '';
 
-				$event_file_indicator = $language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_EVENT_FILE_INDICATOR');
-
-				foreach($filenames as $filename)
+				foreach ($sheets as $sheet)
 				{
-					$options .= '<option value="' . $filename . '"';
-					$options .= ($filename == $file) ? ' selected="selected"' : '';
-					$options .= '>' . $filename;
-					$options .= $extrastyle_directory->is_event($filename) ? ' ' . $event_file_indicator : '';
-					$options .= '</option>';
+					$template->assign_block_vars('sheets', [
+						'S_SELECTED'	=> $sheet_name === $sheet,
+						'NAME'			=> $sheet,
+					]);				
 				}
-
-				$template->assign_block_vars('sheets', [
-					'S_SELECTED'	=> $filename === $file,
-				]);
 
 				$template->assign_vars([
 					'EDITOR_ROWS'			=> $editor_rows,
-					'FILENAME'				=> $file,
-					'S_IS_EVENT'			=> $extrastyle_directory->is_event($file),
-					'FILE_DATA'				=> utf8_htmlspecialchars($data),
-					'S_FILENAMES'			=> $options,
+					'SHEET_NAME'			=> $sheet_name,
+					'CONTENT'				=> utf8_htmlspecialchars($content),
 				]);
 
 				break;
