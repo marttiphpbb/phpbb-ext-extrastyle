@@ -12,7 +12,7 @@ use marttiphpbb\extrastyle\util\cnst;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class main_listener implements EventSubscriberInterface
+class listener implements EventSubscriberInterface
 {
 	/**
 	*/
@@ -24,6 +24,8 @@ class main_listener implements EventSubscriberInterface
 	{
 		return [
 			'core.user_setup'	=> 'core_user_setup',
+			'core.twig_environment_render_template_before'
+				=> 'core_twig_environment_render_template_before',
 		];
 	}
 
@@ -35,6 +37,21 @@ class main_listener implements EventSubscriberInterface
 			'lang_set' => 'common',
 		];
 		$event['lang_set_ext'] = $lang_set_ext;
+	}
+
+	public function core_twig_environment_render_template_before(event $event)
+	{
+		$context = $event['context'];
+
+		$context['marttiphpbb_extrastyle']['sheets']['all'] = <<<'EOT'
+div.marttiphpbb-showtopicstarter {
+	background-color: black;
+	color: white;
+}
+EOT;
+
+
+		$event['context'] = $context;
 	}
 
 		

@@ -1,10 +1,10 @@
 services:
-    marttiphpbb.extrastyle.listener:
-        class: marttiphpbb\extrastyle\event\main_listener
+    marttiphpbb.extrastyle.event.listener:
+        class: marttiphpbb\extrastyle\event\listener
         tags:
             - { name: event.listener }
 
-    marttiphpbb.extrastyle.mcp_forum_listener:
+    marttiphpbb.extrastyle.event.mcp_forum_listener:
         class: marttiphpbb\extrastyle\event\mcp_forum_listener
         arguments:
             - '@dbal.conn'
@@ -21,4 +21,8 @@ services:
             - '@user'
         tags:
             - { name: event.listener }
-           
+    marttiphpbb.extrastyle.service.store:
+        class: marttiphpbb\extrastyle\service\store
+        arguments:
+            - '@config_text'
+            - '@cache.driver'        

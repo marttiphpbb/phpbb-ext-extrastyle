@@ -26,7 +26,12 @@ class main_info
 					'title'	=> cnst::L_ACP . '_EDIT',
 					'auth'	=> 'ext_marttiphpbb/extrastyle && acl_a_board',
 					'cat'	=> [cnst::L_ACP],
-				],								
+				],
+				'external_sheets'	=> [
+					'title'	=> cnst::L_ACP . '_EXTERNAL_SHEETS',
+					'auth'	=> 'ext_marttiphpbb/extrastyle && acl_a_board',
+					'cat'	=> [cnst::L_ACP],
+				],											
 			],
 		];
 	}

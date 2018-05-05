@@ -5,11 +5,11 @@
 			$('#file_data').attr('rows', editor_rows);
 		});
 
-		$('select#filename').change(function () {
-			$('form#file_edit').submit();
+		$('select#sheet').change(function () {
+			$('form#sheet_edit').submit();
 		});
 
-		$('input#new_file').keydown(function(e) {
+		$('input#new_sheet').keydown(function(e) {
 			if (e.which == 13) {
 				$('input#create').focus();
 			}

@@ -1,44 +1,51 @@
-<!-- INCLUDE overall_header.html -->
+{%- include 'overall_header.html' -%}
 
-<h1>{L_ACP_MARTTIPHPBB_EXTRASTYLE_EDIT} {L_COLON} {FILENAME}<!-- IF S_IS_EVENT --> {L_ACP_MARTTIPHPBB_EXTRASTYLE_EVENT_FILE_INDICATOR}<!-- ENDIF --></h1>
-<!-- IF ACP_MARTTIPHPBB_EXTRASTYLE_INCLUDEPHP_WARNING -->
-<div class="errorbox"><p>{ACP_MARTTIPHPBB_EXTRASTYLE_INCLUDEPHP_WARNING}</p></div>
-<!-- ENDIF -->
-<form method="post" action="{U_ACTION}" id="file_edit">
+<h1>{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_EDIT') }} {{ lang('COLON') }} {{ SHEET -}}</h1>
+<p>{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_EDIT_EXPLAIN') -}}</p>
+
+<form method="post" action="{{- U_ACTION }}" id="sheet_edit">
 
 <fieldset>
 
 <dl>
-	<dt><label for="filename">{L_ACP_MARTTIPHPBB_EXTRASTYLE_FILE}</label>
+	<dt>
+		<label for="filename">
+			{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_FILE') -}}
+		</label>
 	</dt>
 	<dd>
 		<select id="filename" name="filename">
-			{S_FILENAMES}
+			{%- for s in MARTTIPHPBB_EXTRASTYLE_SHEETS -%}
+				<option>
+					{{- s.name -}}
+				</option>
+			{%- endfor -%}
 		</select>
-		<input class="button2" type="submit" value="{L_SELECT}" />
+		<input class="button2" type="submit" value="{{- lang('SELECT') -}}" />
 	</dd>
 </dl>
 <dl>
-	<dt><label for="editor_rows">{L_ACP_MARTTIPHPBB_EXTRASTYLE_EDITOR_ROWS}</label></dt>
-	<dd><input id="editor_rows" name="editor_rows" type="number" maxlength="3" min="5" max="999" value="{EDITOR_ROWS}" />
+	<dt><label for="editor_rows">{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_EDITOR_ROWS') -}}</label></dt>
+	<dd><input id="editor_rows" name="editor_rows" type="number" maxlength="3" min="5" max="999" value="{{- EDITOR_ROWS -}}" />
 	</dd>
 </dl>
-<textarea name="file_data" id="file_data" style="font-family:'Courier New', monospace;font-size:9pt;line-height:125%;width:100%;" cols="80" rows="{EDITOR_ROWS}">{FILE_DATA}</textarea>
+<textarea name="file_data" id="file_data" style="font-family:'Courier New', monospace;font-size:9pt;line-height:125%;width:100%;" cols="80" rows="{{- EDITOR_ROWS -}}">{{- SHEET_CONTENT -}}</textarea>
+
+</fieldset>
+
+<fieldset>
 
 </fieldset>
 
 <fieldset class="submit-buttons">
-	<legend>{L_SUBMIT}</legend>
-	{S_HIDDEN_FIELDS}
-	{S_FORM_TOKEN}
-	<input class="button1" id="save" type="submit" name="save" value="{L_ACP_MARTTIPHPBB_EXTRASTYLE_SAVE}" />
-	<input class="button1" id="save_purge_cache" type="submit" name="save_purge_cache" value="{L_ACP_MARTTIPHPBB_EXTRASTYLE_SAVE_PURGE_CACHE}" />
+	<legend>{{- lang('SUBMIT') -}}</legend>
+	{{- S_HIDDEN_FIELDS -}}
+	{{- S_FORM_TOKEN -}}
+	<input class="button1" id="save" type="submit" name="save" value="{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SAVE') -}}">
+	<input class="button1" id="save_purge_cache" type="submit" name="save_purge_cache" value="{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SAVE_PURGE_CACHE') -}}">
 </fieldset>
 </form>
 
-<fieldset>
-	<p>{INCLUDE_EXAMPLE}</p>
-</fieldset>
-
-<!-- INCLUDEJS extrastyle.js -->
-<!-- INCLUDE overall_footer.html -->
+{%- INCLUDECSS '@marttiphpbb_extrastyle/editor.css' -%}
+{%- INCLUDEJS '@marttiphpbb_extrastyle/editor.js' -%}
+{%- include 'overall_footer.html' -%}

@@ -1,3 +1,3 @@
-{%- for s in marttiphp_extrastyle.sheets -%}
-    {%- INCLUDECSS '@marttiphpbb_extrastyle/'~s~'.css' -%}
+{%- for name, content in marttiphpbb_extrastyle.sheets -%}
+    {%- INCLUDECSS '@marttiphpbb_extrastyle/'~name~'.css' -%}
 {%- endfor -%}
