@@ -24,6 +24,8 @@ class main_module
 		$cache = $phpbb_container->get('cache');
 		$language = $phpbb_container->get('language');
 		$user = $phpbb_container->get('user');
+		$ext_manager = $phpbb_container->get('ext.manager');
+		
 
 //		$phpbb_root_path = $phpbb_container->getParameter('core.root_path');
 	
@@ -41,12 +43,11 @@ class main_module
 				$this->page_title = $language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_EDIT');
 
 				$file =	$request->variable('filename', '', true);
-				$editor_rows = max(5, min(999, $request->variable('editor_rows', 8)));
-
+		
 				if ($request->is_set_post('save'))
 				{
 
-					$data	= utf8_normalize_nfc($request->variable('file_data', '', true));
+					$data	= utf8_normalize_nfc($request->variable('sheet_content', '', true));
 					$data	= htmlspecialchars_decode($data);
 
 					if (confirm_box(true))
@@ -91,7 +92,6 @@ class main_module
 
 				$sheets = [];
 
-
 				foreach ($sheets as $sheet)
 				{
 					$template->assign_block_vars('sheets', [
@@ -100,10 +100,18 @@ class main_module
 					]);				
 				}
 
+				$codemirror_enabled = $ext_manager->is_enabled('marttiphpbb/codemirror');
+		 
+				if ($codemirror_enabled)
+				{
+					$load = $phpbb_container->get('marttiphpbb.codemirror.load');
+					$load->set_mode('css');
+				}
+
 				$template->assign_vars([
 					'EDITOR_ROWS'			=> $editor_rows,
 					'SHEET_NAME'			=> $sheet_name,
-					'CONTENT'				=> utf8_htmlspecialchars($content),
+					'SHEET_CONTENT'			=> utf8_htmlspecialchars($content),
 				]);
 
 				break;
