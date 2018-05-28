@@ -147,7 +147,7 @@ class store
 			{
 				if (!in_array($script_name, $script_names))
 				{
-					$key = array_search($heet_name, $sheet_names);
+					$key = array_search($sheet_name, $sheet_names);
 					unset($this->data['load'][$script_name][$key]);
 				}
 			}
