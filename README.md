@@ -1,6 +1,6 @@
 # PhpBB Extension - marttiphpbb Extra Style
 
-[Topic on phpBB.com]()
+[Topic on phpBB.com](https://www.phpbb.com/community/viewtopic.php?f=456&t=2473561)
 
 ## Requirements
 
@@ -45,8 +45,7 @@ You can install this on the latest release of phpBB 3.2 by following the steps b
 
 ### ACP edit sheet
 
-We are styling here the content of the [Show Topic Starter](https://github.com/marttiphpbb/phpbb-ext-showtopicstarter) extension which doesn't provide 
-styling of its own.
+We are styling here the content of the [Show Topic Starter](https://github.com/marttiphpbb/phpbb-ext-showtopicstarter) extension which doesn't provide styling of its own.
 
 ![ACP edit sheet](doc/edit.png)
 
