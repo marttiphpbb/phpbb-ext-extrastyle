@@ -14,6 +14,4 @@ class cnst
 	const PREFIX = self::ID . '_';
 	const L = 'MARTTIPHPBB_EXTRASTYLE';
 	const L_ACP = 'ACP_' . self::L;
-	const L_MCP = 'MCP_' . self::L;
-	const TPL = '@' . self::ID . '/';
 }
