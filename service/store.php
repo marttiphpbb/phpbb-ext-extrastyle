@@ -67,6 +67,11 @@ class store
 		return  '';
 	}
 
+	public function get_sheet_version(string $name):string 
+	{
+		return $this->data['sheets'][$name]['version'] ?? '';
+	}
+
 	public function set_sheet(string $name, string $version, string $script_names, string $content)
 	{
 		$this->load();

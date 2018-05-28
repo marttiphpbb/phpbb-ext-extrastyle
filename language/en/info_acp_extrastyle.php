@@ -21,6 +21,4 @@ $lang = array_merge($lang, [
 	'ACP_MARTTIPHPBB_EXTRASTYLE'					=> 'Extra Style',
 	'ACP_MARTTIPHPBB_EXTRASTYLE_EDIT'				=> 'Edit',
 	'ACP_MARTTIPHPBB_EXTRASTYLE_SHEETS'				=> 'Sheets',
-	'ACP_MARTTIPHPBB_EXTRASTYLE_EXTERNAL_SHEETS'	=> 'Exteral sheets',
-
 ]);

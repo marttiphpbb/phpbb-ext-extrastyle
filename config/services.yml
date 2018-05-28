@@ -1,17 +1,21 @@
 services:
-    marttiphpbb.extrastyle.event.listener:
-        class: marttiphpbb\extrastyle\event\listener
-        tags:
-            - { name: event.listener }
-
     marttiphpbb.extrastyle.service.store:
         class: marttiphpbb\extrastyle\service\store
         arguments:
             - '@config_text'
-            - '@cache.driver' 
-       
+            - '@cache.driver'
+
+    marttiphpbb.extrastyle.event.listener:
+        class: marttiphpbb\extrastyle\event\listener
+        arguments:
+            - '@controller.helper'
+            - '@marttiphpbb.extrastyle.service.store'
+        tags:
+            - { name: event.listener }
+      
     marttiphpbb.extrastyle.controller:
         class: marttiphpbb\extrastyle\controller\main
         arguments:
             - '@marttiphpbb.extrastyle.service.store'
+            - '@request'
 

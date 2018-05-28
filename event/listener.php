@@ -8,16 +8,26 @@
 namespace marttiphpbb\extrastyle\event;
 
 use phpbb\event\data as event;
-use marttiphpbb\extrastyle\util\cnst;
+use phpbb\controller\helper;
+use marttiphpbb\extrastyle\service\store;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
 {
+	/** @var store */
+	protected $store;
+
+	/** @var helper */
+	protected $helper;
+
 	/**
+	 * @param store
 	*/
-	public function __construct()
+	public function __construct(helper $helper, store $store)
 	{
+		$this->helper = $helper;
+		$this->store = $store;
 	}
 
 	static public function getSubscribedEvents()
@@ -32,15 +42,25 @@ class listener implements EventSubscriberInterface
 	{
 		$context = $event['context'];
 
-		$context['marttiphpbb_extrastyle']['sheets']['all'] = <<<'EOT'
-div.marttiphpbb-showtopicstarter {
-	background-color: black;
-	color: white;
-}
-EOT;
+		if (!isset($context['SCRIPT_NAME']))
+		{
+			return;
+		}
 
+		$sheet_names = $this->store->get_load_sheets($context['SCRIPT_NAME']);
+		$sheets = [];
+
+		foreach ($sheet_names as $sheet_name)
+		{
+			$params = [
+				'name'		=> $sheet_name,
+				'v'			=> $this->store->get_sheet_version($sheet_name),	
+			];
+
+			$sheets[] = $this->helper->route('marttiphpbb_extrastyle_render_controller', $params);
+		}
+
+		$context['marttiphpbb_extrastyle'] = $sheets;
 		$event['context'] = $context;
-	}
-
-		
+	}		
 }

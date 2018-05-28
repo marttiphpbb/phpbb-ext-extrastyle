@@ -13,6 +13,7 @@ use phpbb\template\twig\twig as template;
 use phpbb\user;
 use phpbb\language\language;
 use phpbb\controller\helper;
+use marttiphpbb\extrastyle\service\store;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,33 +22,45 @@ class main
 	/** @var store */
 	protected $store;
 
+	/** @var request */
+	protected $request;
+
 	/**
 	* @param store $store
 	*/
-
 	public function __construct(
-		store $store
+		store $store,
+		request $request
 	)
 	{
 		$this->store = $store;
+		$this->request = $request;
 	}
 
 	/**
 	* @param string   $name
 	* @return Response
 	*/
-	public function render(string $name, string $v):Response
+	public function render(string $name):Response
 	{
+		$version = $this->request->variable('v', '');
+
 		$response = new Response();
 		$response->headers->set('Content-Type', 'text/css');
 
-		if (!$v)
+		if (!$version)
 		{
 			$response->setStatusCode(Response::HTTP_NOT_FOUND);
 			return $response;
 		}
 
-		$content = $this->store->get();
+		$content = $this->store->get_sheet_content($name, $version);
+
+		if (!$content)
+		{
+			$response->setStatusCode(Response::HTTP_NOT_FOUND);
+			return $response;
+		}
 
 		$response->setStatusCode(Response::HTTP_OK);
 		$response->setContent($content);
