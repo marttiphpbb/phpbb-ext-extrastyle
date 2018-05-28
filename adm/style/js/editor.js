@@ -5,8 +5,9 @@
 		});
 
 		$('input#new_sheet').keydown(function(e) {
+//			e.preventDefault();
 			if (e.which == 13) {
-				$('input#create').focus();
+				$('input#create').click();
 			}
 		});
 	});

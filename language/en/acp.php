@@ -53,4 +53,10 @@ $lang = array_merge($lang, [
 		=> 'The sheet %s does not exist.',
 	'ACP_MARTTIPHPBB_EXTRASTYLE_NO_SHEETS'
 		=> 'There are no extra style sheets to edit yet. You can create one in the page <a href="%s">"sheets"</a>.',
+	'ACP_MARTTIPHPBB_EXTRASTYLE_SCRIPT_NAMES'
+		=> 'Script names',
+	'ACP_MARTTIPHPBB_EXTRASTYLE_SCRIPT_NAMES_EXPLAIN'
+		=> 'A comma separated list of script names (without the .php extension) 
+		to define when this style sheet should be loaded. i.e. viewforum, viewtopic, index 
+		Style sheet content should as much be grouped together in order to avoid the number of files loaded.',		
 ]);

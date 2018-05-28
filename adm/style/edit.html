@@ -30,6 +30,16 @@
 <form method="post" action="{{- U_ACTION -}}">
 <fieldset>
 
+	<dl>
+		<dt><label for="script_names">{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SCRIPT_NAMES') -}}</label>
+		<br>
+			{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SCRIPT_NAMES_EXPLAIN') -}}
+		</dt>
+		<dd>
+		<input type="text" name="script_names" id="script_names" value="{{- SCRIPT_NAMES -}}" size="72">
+		</dd>
+	</dl>
+
 	<textarea name="sheet_content" id="sheet_content" cols="80" rows="10"{{- marttiphpbb_codemirror.data_attr ?? '' -}}>
 		{{- SHEET_CONTENT -}}
 	</textarea>

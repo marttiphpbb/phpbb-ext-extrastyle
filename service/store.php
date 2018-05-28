@@ -110,14 +110,44 @@ class store
 		return $this->data['load'][$script_name] ?? [];
 	}
 
-	public function get_all_load_sheets():array 
+	public function set_script_names(string $sheet_name, array $script_names)
 	{
 		$this->load();
-		return $this->data['load'];
-	}
 
-	public function set_all_load_sheets(array $all_load_sheets)
-	{
-		$this->data['load'] = $all_load_sheets;
+		foreach ($script_names as $script_name)
+		{
+			if (isset($this->data['load'][$script_name]))
+			{
+				foreach($this->data['load'][$script_name] as $sh_name)
+				{
+					if ($sh_name === $sheet_name)
+					{
+						// already stored.
+						continue;
+					}
+				}
+
+				array_push($this->data['load'][$script_name], $sheet_name);
+
+				continue;
+			}
+
+			$this->data['load'][$script_name] = [$sheet_name];
+		}
+
+		// cleanup
+		foreach($this->data['load'] as $script_name => $sheet_names)
+		{
+			if (in_array($sheet_name, $sheet_names))
+			{
+				if (!in_array($script_name, $script_names))
+				{
+					$key = array_search($heet_name, $sheet_names);
+					unset($this->data['load'][$script_name][$key]);
+				}
+			}
+		}
+
+		$this->write();
 	}
 }

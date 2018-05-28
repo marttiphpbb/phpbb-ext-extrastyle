@@ -64,16 +64,21 @@ class main_module
 					$sheet_content = htmlspecialchars_decode($sheet_content);
 		
 					$script_names = $request->variable('script_names', '');
+					$script_names = strtolower($script_names);
 
 					if (confirm_box(true))
 					{
-						$store->set_sheet($sheet_name, crc32($sheet_content), 'viewtopic', $sheet_content);
+						$script_names = str_replace([' ', '.php'], '', $script_names);
+						$store->set_sheet($sheet_name, crc32($sheet_content), $script_names, $sheet_content);			
+						$script_names = explode(',', $script_names);
+						$store->set_script_names($sheet_name, $script_names);
 						trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_SAVED'), $file) . adm_back_link($this->u_action . '&amp;filename=' . $file));
 					}
 
 					$s_hidden_fields = [
 						'sheet_name'	=> $sheet_name,
 						'sheet_content' => $sheet_content,
+						'script_names'	=> $script_names,
 						'mode'			=> 'edit',
 						'save'			=> 1,
 					];
@@ -107,6 +112,7 @@ class main_module
 				$template->assign_vars([
 					'S_HIDDEN_FIELDS'		=> build_hidden_fields($s_hidden_fields),
 					'SHEET_NAME'			=> $request_sheet_name,
+					'SCRIPT_NAMES'			=> $sheets[$request_sheet_name]['script_names'],
 					'SHEET_CONTENT'			=> $sheets[$request_sheet_name]['content'],
 					'S_HIDDEN_FIELDS_GET'	=> build_hidden_fields($query),
 				]);
@@ -166,7 +172,10 @@ class main_module
 				{
 					if (!in_array($sheet_to_delete, array_keys($sheets)))
 					{
-						trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DOES_NOT_EXIST'), $sheet_to_delete) . adm_back_link($this->u_action), E_USER_WARNING);
+						trigger_error(sprintf(
+							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DOES_NOT_EXIST'), 
+								$sheet_to_delete) . adm_back_link($this->u_action), 
+									E_USER_WARNING);
 					}
 
 					if (confirm_box(true))
@@ -194,7 +203,7 @@ class main_module
 						'NAME'				=> $sheet_name,
 						'U_EDIT'			=> str_replace('mode=sheets', 'mode=edit&sheet_name=' . $sheet_name, $this->u_action),
 						'SIZE'				=> strlen($d['content']),
-						'DELETE_SHEET_NAME'	=> sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_DELETE_SHEET_NAME'), $sheet_name),
+						'DELETE_SHEET_NAME'	=> sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DELETE_NAME'), $sheet_name),
 					]);
 				}
 
