@@ -1,0 +1,6 @@
+marttiphpbb_extrastyle_render_controller:
+    pattern: /extrastyle/{name}__css
+    defaults: { _controller: marttiphpbb.extrastyle.controller:render }
+    requirements:
+        _method: GET
+        name: '[a-z][a-z0-9-]+'

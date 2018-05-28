@@ -1,7 +1,7 @@
 ;(function($, window, document) {
 	$('document').ready(function () {
-		$('select#sheet').change(function () {
-			$('form#sheet_edit').submit();
+		$('select#sheet_name').change(function () {
+			$(this).closest('form').submit();
 		});
 
 		$('input#new_sheet').keydown(function(e) {

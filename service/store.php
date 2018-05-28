@@ -15,9 +15,7 @@ use marttiphpbb\extrastyle\util\cnst;
 class store
 {
 	const KEY = cnst::ID;
-	const CACHE_PREFIX = '_' . self::KEY . '_';
-	const CACHE_KEY_EXTERNAL_LINKS = self::PREFIX . 'links';
-	const CACHE_PREFIX_CONTENT = self::PREFIX . 'content_';
+	const CACHE_KEY = '_' . self::KEY;
 
 	/** @var config_text */
 	private $config_text;
@@ -58,89 +56,68 @@ class store
 		$this->cache->put(self::CACHE_KEY, $this->data);
 	}
 
-	public function get(string $key)
+	public function get_sheet_content(string $name, string $version):string
 	{
 		$this->load();
-		return $this->data[$key] ?? null;
-	}
-
-	public function set(string $key, $data)
-	{
-		$this->load();
-		$this->data[$key] = $data;
-		$this->write();
-	}
-
-	public function delete(string $key)
-	{
-		$this->load();
-		unset($this->data[$key]);
-		$this->write();
-	}
-
-	public function get_template_forum_ids():array 
-	{
-		$this->load();
-		return array_keys($this->data['templates'] ?? []);
-	}
-
-	public function get_template(int $forum_id):string
-	{
-		$this->load();
-		return $this->data['templates'][$forum_id] ?? '';
-	}
-
-	public function set_template(int $forum_id, string $template)
-	{
-		$this->load();
-
-		if (strlen($template) === 0) 
+		$sheet = $this->data['sheets'][$name];
+		if ($sheet['version'] === $version)
 		{
-			unset($this->data['templates'][$forum_id]);
+			return $sheet['content'];
 		}
-		else
-		{
-			$this->data['templates'][$forum_id] = $template;			
-		}
+		return  '';
+	}
 
+	public function set_sheet(string $name, string $version, string $script_names, string $content)
+	{
+		$this->load();
+		$this->data['sheets'][$name] = [
+			'content'	=> $content,
+			'version'	=> $version,
+			'script_names' => $script_names,
+		];
 		$this->write();
 	}
 
-	public function template_is_set(int $forum_id):bool
+	public function get_all_sheets():array 
+	{
+		$this->load();
+		return $this->data['sheets'];
+	}
+
+	public function delete_sheet(string $name)
 	{
 		$this->load();
 	
-		return isset($this->data['templates'][$forum_id]);
-	}
+		unset($this->data['sheets'][$name]);
 
-	public function delete_all_templates_but(array $keep_forum_ids)
-	{
-		$keep_forum_ids = array_fill_keys($keep_forum_ids, true);
-
-		$this->load();
-
-		if (!isset($data['templates']))
+		foreach($this->data['load'] as $script_name => $name_ary)
 		{
-			return;
-		}
-
-		foreach ($this->data['templates'] as $forum_id => $template)
-		{
-			if (!isset($keep_forum_ids[$forum_id]))
+			foreach ($name_ary as $key => $n)
 			{
-				if (isset($this->data['deleted']))
+				if ($n === $name)
 				{
-					$this->data['deleted'][] = $forum_id;
+					unset($this->data['load'][$script_name][$key]);
 				}
-				else
-				{
-					$this->data['deleted'] = [$forum_id];
-				}
-
-				unset($this->data['templates'][$forum_id]);
 			}
 		}
 
 		$this->write();
+	}
+
+	public function get_load_sheets(string $script_name):array
+	{
+		$this->load();
+		return $this->data['load'][$script_name] ?? [];
+	}
+
+	public function get_all_load_sheets():array 
+	{
+		$this->load();
+		return $this->data['load'];
+	}
+
+	public function set_all_load_sheets(array $all_load_sheets)
+	{
+		$this->data['load'] = $all_load_sheets;
 	}
 }

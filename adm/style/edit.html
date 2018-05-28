@@ -1,43 +1,48 @@
-{%- include 'overall_header.html' -%}
+{%- extends 'base.html' -%}
 
-<h1>{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_EDIT') }} {{ lang('COLON') }} {{ SHEET_NAME -}}</h1>
-<p>{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_EDIT_EXPLAIN') -}}</p>
+{%- block title -%}
+	{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_EDIT') }} {{ lang('COLON') }} {{ SHEET_NAME -}}
+{%- endblock title -%}
 
-<form method="post" action="{{- U_ACTION }}" id="sheet_edit">
+{%- block content -%}
+<fieldset>
+<form method="get">
+	<dl>
 
+		<dt>
+			<label for="sheet_name">
+				{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET') -}}
+			</label>
+		</dt>
+		<dd>
+			<select id="sheet_name" name="sheet_name">
+				{%- for s in sheets -%}
+					<option value="{{- s.NAME -}}"{%- if s.S_SELECTED %} selected="selected"{%- endif -%}>
+						{{- s.NAME -}}
+					</option>
+				{%- endfor -%}
+			</select>
+		</dd>
+	</dl>
+	{{- S_HIDDEN_FIELDS_GET -}}
+</form>
+</fieldset>
+<form method="post" action="{{- U_ACTION -}}">
 <fieldset>
 
-<dl>
-	<dt>
-		<label for="filename">
-			{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET') -}}
-		</label>
-	</dt>
-	<dd>
-		<select id="filename" name="filename">
-			{%- for s in MARTTIPHPBB_EXTRASTYLE_SHEETS -%}
-				<option>
-					{{- s.name -}}
-				</option>
-			{%- endfor -%}
-		</select>
-	</dd>
-</dl>
-
-<textarea name="sheet_content" id="sheet_content" cols="80" rows="10"{{- marttiphpbb_codemirror.data_attr ?? '' -}}>
-	{{- SHEET_CONTENT -}}
-</textarea>
+	<textarea name="sheet_content" id="sheet_content" cols="80" rows="10"{{- marttiphpbb_codemirror.data_attr ?? '' -}}>
+		{{- SHEET_CONTENT -}}
+	</textarea>
 
 </fieldset>
-
 <fieldset class="submit-buttons">
-	<legend>{{- lang('SUBMIT') -}}</legend>
 	{{- S_HIDDEN_FIELDS -}}
-	{{- S_FORM_TOKEN -}}
 	<input class="button1" id="save" type="submit" name="save" value="{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SAVE') -}}">
-    <input class="button2" type="reset" id="reset" name="reset" value="{{- lang('RESET') -}}">	
+	<input class="button2" type="reset" id="reset" name="reset" value="{{- lang('RESET') -}}">	
+
+	{{- S_FORM_TOKEN -}}
+
 </fieldset>
 </form>
-
 {%- INCLUDEJS '@marttiphpbb_extrastyle/js/editor.js' -%}
-{%- include 'overall_footer.html' -%}
+{%- endblock content -%}

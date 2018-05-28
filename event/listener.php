@@ -23,20 +23,9 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return [
-			'core.user_setup'	=> 'core_user_setup',
 			'core.twig_environment_render_template_before'
 				=> 'core_twig_environment_render_template_before',
 		];
-	}
-
-	public function core_user_setup(event $event)
-	{
-		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = [
-			'ext_name' => cnst::FOLDER,
-			'lang_set' => 'common',
-		];
-		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
 	public function core_twig_environment_render_template_before(event $event)
@@ -49,7 +38,6 @@ div.marttiphpbb-showtopicstarter {
 	color: white;
 }
 EOT;
-
 
 		$event['context'] = $context;
 	}

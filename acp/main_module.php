@@ -20,83 +20,72 @@ class main_module
 
 		$request = $phpbb_container->get('request');
 		$template = $phpbb_container->get('template');
-		$config = $phpbb_container->get('config');
-		$cache = $phpbb_container->get('cache');
 		$language = $phpbb_container->get('language');
-		$user = $phpbb_container->get('user');
 		$ext_manager = $phpbb_container->get('ext.manager');
-		
+		$store = $phpbb_container->get('marttiphpbb.extrastyle.service.store');
 
-//		$phpbb_root_path = $phpbb_container->getParameter('core.root_path');
-	
 		$language->add_lang('acp', cnst::FOLDER);
 		add_form_key(cnst::FOLDER);
-
-//		$extrastyle_directory = new extrastyle_directory($user, $phpbb_root_path);
-
-//		$filenames = $extrastyle_directory->get_filenames();
 
 		switch($mode)
 		{
 			case 'edit':
+	
 				$this->tpl_name = 'edit';
 				$this->page_title = $language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_EDIT');
 
-				$file =	$request->variable('filename', '', true);
-		
+				$request_sheet_name = $request->variable('sheet_name', '', true);
+				$sheets = $store->get_all_sheets();
+
+				if (!$sheets)
+				{
+					$u_sheets = str_replace('mode=edit', 'mode=sheets', $this->u_action);
+					trigger_error($language->lang(cnst::L_ACP . '_NO_SHEETS', $u_sheets));
+				}
+
+				if ($request_sheet_name === '')
+				{
+					end($sheets);
+					$request_sheet_name = key($sheets);
+				}
+
+				if (!isset($sheets[$request_sheet_name]))
+				{
+					trigger_error($language->lang(
+						cnst::L_ACP . '_SHEET_DOES_NOT_EXIST', 
+							$request_sheet_name),
+								E_USER_WARNING);					
+				}
+				
 				if ($request->is_set_post('save'))
 				{
-
-					$data	= utf8_normalize_nfc($request->variable('sheet_content', '', true));
-					$data	= htmlspecialchars_decode($data);
+					$sheet_name = $request->variable('sheet_name', '');
+					$sheet_content = utf8_normalize_nfc($request->variable('sheet_content', '', true));
+					$sheet_content = htmlspecialchars_decode($sheet_content);
+		
+					$script_names = $request->variable('script_names', '');
 
 					if (confirm_box(true))
 					{
-//						$extrastyle_directory->save_to_file($file, $data);
-
-						if ($save_purge_cache)
-						{
-							$config->increment('assets_version', 1);
-							$cache->purge();
-							trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_SAVED_CACHE_PURGED'), $file) . adm_back_link($this->u_action . '&amp;filename='. $file));
-						}
-
+						$store->set_sheet($sheet_name, crc32($sheet_content), 'viewtopic', $sheet_content);
 						trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_SAVED'), $file) . adm_back_link($this->u_action . '&amp;filename=' . $file));
 					}
 
-					if (!in_array($file, $filenames))
-					{
-						trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DOES_NOT_EXIST'), $file) . adm_back_link($this->u_action), E_USER_WARNING);
-					}
-
-					$confirm_message = ($save_purge_cache) ? 'ACP_MARTTIPHPBB_EXTRASTYLE_SAVE_PURGE_CACHE_CONFIRM' : 'ACP_MARTTIPHPBB_EXTRASTYLE_SAVE_CONFIRM';
-
 					$s_hidden_fields = [
-						'filename'			=> $file,
-						'file_data' 		=> utf8_htmlspecialchars($data),
-						'mode'				=> 'edit',
+						'sheet_name'	=> $sheet_name,
+						'sheet_content' => $sheet_content,
+						'mode'			=> 'edit',
+						'save'			=> 1,
 					];
 
-					$submit_field = $save_purge_cache ? 'save_purge_cache' : 'save';
-					$s_hidden_fields[$submit_field] = 1;
-
-					confirm_box(false, sprintf($language->lang($confirm_message), $file), build_hidden_fields($s_hidden_fields));
-				}
-				else
-				{
-//					reset($filenames);
-//					$file = $file == '' ? current($filenames) : $file;
+					confirm_box(false, sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SAVE_CONFIRM'), $sheet_name), build_hidden_fields($s_hidden_fields));
 				}
 
-//				$data = $extrastyle_directory->file_get_contents($file);
-
-				$sheets = [];
-
-				foreach ($sheets as $sheet)
+				foreach ($sheets as $sheet_name => $data)
 				{
 					$template->assign_block_vars('sheets', [
-						'S_SELECTED'	=> $sheet_name === $sheet,
-						'NAME'			=> $sheet,
+						'S_SELECTED'	=> $request_sheet_name === $sheet_name,
+						'NAME'			=> $sheet_name,
 					]);				
 				}
 
@@ -108,18 +97,28 @@ class main_module
 					$load->set_mode('css');
 				}
 
+				$query = [];
+				parse_str(parse_url(html_entity_decode($this->u_action), PHP_URL_QUERY), $query);
+
+				$s_hidden_fields = [
+					'sheet_name'	=> $sheet_name,
+				];
+
 				$template->assign_vars([
-					'EDITOR_ROWS'			=> $editor_rows,
-					'SHEET_NAME'			=> $sheet_name,
-					'SHEET_CONTENT'			=> utf8_htmlspecialchars($content),
+					'S_HIDDEN_FIELDS'		=> build_hidden_fields($s_hidden_fields),
+					'SHEET_NAME'			=> $request_sheet_name,
+					'SHEET_CONTENT'			=> $sheets[$request_sheet_name]['content'],
+					'S_HIDDEN_FIELDS_GET'	=> build_hidden_fields($query),
 				]);
 
-				break;
+			break;
 
 			case 'sheets':
 
 				$this->tpl_name = 'sheets';
 				$this->page_title = $language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEETS');
+
+				$sheets = $store->get_all_sheets(); 
 
 				$new_sheet = $request->variable('new_sheet', '');
 				$sheet_to_delete = array_keys($request->variable('delete', array('' => '')));
@@ -134,31 +133,49 @@ class main_module
 
 					if (!$new_sheet)
 					{
-						trigger_error($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_EMPTY') . adm_back_link($this->u_action), E_USER_WARNING);
+						trigger_error(
+							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_EMPTY') . 
+								adm_back_link($this->u_action), 
+									E_USER_WARNING);
 					}
 
-					if (in_array($new_sheet, $sheets))
+					if (in_array($new_sheet, array_keys($sheets)))
 					{
-						trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_ALREADY_EXISTS'), $new_sheet) . adm_back_link($this->u_action), E_USER_WARNING);
+						trigger_error(sprintf(
+							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_ALREADY_EXISTS'), 
+								$new_sheet) . 
+									adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$customcode_directory->create_file($new_sheet);
+					if (preg_match('/^[a-z][a-z0-9-]*[a-z0-9]$/', $new_sheet) !== 1 
+						|| strpos($new_sheet, '--') !== false)
+					{
+						trigger_error(sprintf(
+							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_INVALID_FORMAT'), 
+								$new_sheet) . 
+									adm_back_link($this->u_action), E_USER_WARNING);						
+					}
 
-					trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_CREATED'), $new_file) . adm_back_link($this->u_action));
+					$store->set_sheet($new_sheet, crc32(''), '', '');
+
+					$u_edit = str_replace('mode=sheets', 'mode=edit&sheet_name=' . $new_sheet, $this->u_action);
+					redirect($u_edit);
 				}
 
 				if ($request->is_set_post('delete'))
 				{
-					if (!in_array($sheet_to_delete, $filenames))
+					if (!in_array($sheet_to_delete, array_keys($sheets)))
 					{
 						trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DOES_NOT_EXIST'), $sheet_to_delete) . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
 					if (confirm_box(true))
 					{
-						$customcode_directory->delete_file($sheet_to_delete);
+						$store->delete_sheet($sheet_to_delete);
 
-						trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DELETED'), $sheet_to_delete) . adm_back_link($this->u_action));
+						trigger_error(sprintf(
+							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DELETED'), 
+								$sheet_to_delete) . adm_back_link($this->u_action));
 					}
 
 					$s_hidden_fields = [
@@ -166,35 +183,22 @@ class main_module
 						'delete'	=> [$sheet_to_delete => 1],
 					];
 
-					confirm_box(false, sprintf($user->lang('ACP_MARTTIPHPBB_EXTRASTYLE_DELETE_SHEET_CONFIRM'), $sheet_to_delete), build_hidden_fields($s_hidden_fields));
+					confirm_box(false, 
+						sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DELETE_CONFIRM'), 
+							$sheet_to_delete), build_hidden_fields($s_hidden_fields));
 				}
 
-
-				$u_edit = str_replace('mode=sheet', 'mode=edit', $this->u_action);
-
-				foreach ($sheets as $sheet)
+				foreach ($sheets as $sheet_name => $d)
 				{
 					$template->assign_block_vars('sheets', [
-						'NAME'					=> $sheet,
-						'U_EDIT'				=> $u_edit . '&amp;sheet=' . $sheet,
-						'SIZE'					=> $extrastyle_directory->get_size($sheet),
-						'COMMENT'				=> $extrastyle_directory->get_comment($sheet),
-						'DELETE_SHEET_NAME'		=> sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_DELETE_FILE_NAME'), $filename),
+						'NAME'				=> $sheet_name,
+						'U_EDIT'			=> str_replace('mode=sheets', 'mode=edit&sheet_name=' . $sheet_name, $this->u_action),
+						'SIZE'				=> strlen($d['content']),
+						'DELETE_SHEET_NAME'	=> sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_DELETE_SHEET_NAME'), $sheet_name),
 					]);
 				}
 
-				break;
-			
-			case 'external_sheets':
-
-				$this->tpl_name = 'external_sheets';
-				$this->page_title = $language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_EXTERNAL_SHEETS');
-
-
-
-//
-
-				break;
+			break;		
 		}
 
 		$template->assign_var('U_ACTION', $this->u_action);		

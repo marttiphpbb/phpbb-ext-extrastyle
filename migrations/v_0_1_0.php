@@ -13,8 +13,13 @@ class v_0_1_0 extends \phpbb\db\migration\migration
 {
 	public function update_data()
 	{
+		$data = [
+			'sheets' 	=> [],
+			'load'		=> [],
+		];
+
 		return [
-			['config_text.add', [store::KEY, serialize([])]],
+			['config_text.add', [store::KEY, serialize($data)]],
 
 			['module.add', [
 				'acp',
@@ -30,7 +35,6 @@ class v_0_1_0 extends \phpbb\db\migration\migration
 					'modes'				=> [
 						'sheets',
 						'edit',
-						'external_sheets',
 					],
 				],
 			]],			

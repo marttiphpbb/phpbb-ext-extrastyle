@@ -1,16 +1,16 @@
-{%- include 'overall_header.html' -%}
+{%- extends 'base.html' -%}
 
-<h1>{{ lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEETS') -}}</h1>
-<p>{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEETS_EXPLAIN') -}}</p>
+{%- block title -%}
+	{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEETS') -}}
+{%- endblock title -%}
 
-<form method="post" action="{{- U_ACTION -}}">
+{%- block form_content -%}
 	<fieldset>
 		<table class="table1 zebra-table">
 		<thead>
 		<tr>
 			<th>{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME') -}}</th>
 			<th>{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_SIZE') -}}</th>
-			<th>{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DESCRIPTION') -}}</th>
 			<th>{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DELETE') -}}</th>
 		</tr>
 		</thead>
@@ -25,9 +25,10 @@
 				<td>
 					{{- s.SIZE -}}
 				</td>
-				<td>{{- s.DESCRIPTION -}}</td>
 				<td>
-					<input class="button2" type="submit" name="delete[{{- s.NAME -}}]" value="x" title="{{- s.DELETE_FILE_NAME -}}">
+					<button class="button2" type="submit" name="delete[{{- s.NAME -}}]" title="{{- s.DELETE_SHEET_NAME -}}">
+						<i class="fa fa-times"></i>
+					</button>
 				</td>
 			</tr>
 		{%- else -%}
@@ -43,13 +44,12 @@
 		<dl>
 			<input type="text" class="text medium" id="new_file" name="new_sheet" value="{{- NEW_SHEET -}}" maxlength="100">
 			<input class="button2" type="submit" id="create" name="create" value="{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_CREATE') -}}">
+			<p>{{- lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_RULES') -}}</p>
  		</dl>
 		</p>
 	</fieldset>
-{{- S_FORM_TOKEN -}}
-</form>
+	{%- INCLUDEJS '@marttiphpbb_extrastyle/js/editor.js' -%}
+{%- endblock form_content -%}
 
-{#
-	{%- INCLUDEJS '@marttiphpbb_extrastyle/js/sheets.js' -%}
-#}
-{%- include 'overall_footer.html' -%}
+
+
