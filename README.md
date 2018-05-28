@@ -1,17 +1,18 @@
 # PhpBB Extension - marttiphpbb Extra Style
 
-[Topic on phpBB.com](https://www.phpbb.com/community/viewtopic.php?f=456&t=2470326)
+[Topic on phpBB.com]()
 
 ## Requirements
 
-phpBB 3.2+ PHP 7+
+* phpBB 3.2+
+* PHP 7+
+* the extension [marttiphpbb/codemirror](https://github.com/marttiphpbb/phpbb-ext-codemirror)
 
 ## Features
 
-With this extension you define one forum as the "" for obsolete topics.
-In the " forum" the original forum is shown below the title of each topic.
-Two moderator actions are provided "" and "Restore". They depend on the same permission as "Move"(topics).
-Note that you still have to set yourself the appropriate permissions for the "Extra Style" and give it a proper name (suggestion: ""). Normal users should not be able to post in there.
+With this extension you can define extra (small) style sheets. 
+This can come in handy to style content that extensions add to the 
+board.
 
 ## Quick Install
 
@@ -20,7 +21,8 @@ You can install this on the latest release of phpBB 3.2 by following the steps b
 * Create `marttiphpbb/extrastyle` in the `ext` directory.
 * Download and unpack the repository into `ext/marttiphpbb/extrastyle`
 * Enable `Extra Style` in the ACP at `Customise -> Manage extensions`.
-* You can start editing the Extra Style in the Forum ACP for each Forum.
+* Install the [marttiphpbb/codemirror](https://github.com/marttiphpbb/phpbb-ext-codemirror) extension.
+* You can start adding and editing the Extra Style sheets in the ACP.
 
 ## Uninstall
 
@@ -37,34 +39,19 @@ You can install this on the latest release of phpBB 3.2 by following the steps b
 
 ## Screenshots
 
-### d Topic
+### ACP sheets
 
-![d Topic](doc/d_topic.png)
+![ACP sheets](doc/sheets.png)
 
-### Extra Style
+### ACP edit sheet
 
-![Extra Style](doc/_forum.png)
+We are styling here the content of the [Show Topic Starter](https://github.com/marttiphpbb/phpbb-ext-showtopicstarter) extension which doesn't provide 
+styling of its own.
 
-### Confirm 
+![ACP edit sheet](doc/edit.png)
 
-![Confirm ](doc/confirm_.png)
+### Result
 
-### Confirm Restore
+![Result](doc/result.png)
 
-![Confirm Restore](doc/confirm_restore.png)
-
-### MCP Forum
-
-![MCP Forum](doc/mcp_forum.png)
-
-### MCP Topic
-
-![MCP Topic](doc/mcp_topic.png)
-
-### Quickmod
-
-![Quickmod](doc/quickmod.png)
-
-### ACP
-
-![ACP](doc/acp.png)
+(Content by the [Show Topic Starter](https://github.com/marttiphpbb/phpbb-ext-showtopicstarter) extension)
