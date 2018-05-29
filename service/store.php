@@ -46,7 +46,19 @@ class store
 			return;
 		}
 		
-		$this->data = unserialize($this->config_text->get(self::KEY));
+		$data = $this->config_text->get(self::KEY);
+
+		if (!$data)
+		{
+			$this->data = [
+				'sheets' 	=> [],
+				'load'		=> [],
+			];
+
+			return;
+		}
+	
+		$this->data = unserialize($data);
 		$this->cache->put(self::CACHE_KEY, $this->data);
 	}
 
@@ -67,11 +79,6 @@ class store
 		return  '';
 	}
 
-	public function get_sheet_version(string $name):string 
-	{
-		return $this->data['sheets'][$name]['version'] ?? '';
-	}
-
 	public function set_sheet(string $name, string $version, string $script_names, string $content)
 	{
 		$this->load();
@@ -80,7 +87,7 @@ class store
 			'version'	=> $version,
 			'script_names' => $script_names,
 		];
-		$this->write();
+		$this->refresh_script_names();
 	}
 
 	public function get_all_sheets():array 
@@ -91,22 +98,9 @@ class store
 
 	public function delete_sheet(string $name)
 	{
-		$this->load();
-	
+		$this->load();	
 		unset($this->data['sheets'][$name]);
-
-		foreach($this->data['load'] as $script_name => $name_ary)
-		{
-			foreach ($name_ary as $key => $n)
-			{
-				if ($n === $name)
-				{
-					unset($this->data['load'][$script_name][$key]);
-				}
-			}
-		}
-
-		$this->write();
+		$this->refresh_script_names();
 	}
 
 	public function get_load_sheets(string $script_name):array
@@ -115,41 +109,19 @@ class store
 		return $this->data['load'][$script_name] ?? [];
 	}
 
-	public function set_script_names(string $sheet_name, array $script_names)
+	public function refresh_script_names()
 	{
 		$this->load();
 
-		foreach ($script_names as $script_name)
+		$this->data['load'] = [];
+
+		foreach ($this->data['sheets'] as $name => $ary)
 		{
-			if (isset($this->data['load'][$script_name]))
+			$script_names = explode(',', $ary['script_names']);
+	
+			foreach ($script_names as $script_name)
 			{
-				foreach($this->data['load'][$script_name] as $sh_name)
-				{
-					if ($sh_name === $sheet_name)
-					{
-						// already stored.
-						continue;
-					}
-				}
-
-				array_push($this->data['load'][$script_name], $sheet_name);
-
-				continue;
-			}
-
-			$this->data['load'][$script_name] = [$sheet_name];
-		}
-
-		// cleanup
-		foreach($this->data['load'] as $script_name => $sheet_names)
-		{
-			if (in_array($sheet_name, $sheet_names))
-			{
-				if (!in_array($script_name, $script_names))
-				{
-					$key = array_search($sheet_name, $sheet_names);
-					unset($this->data['load'][$script_name][$key]);
-				}
+				$this->data['load'][$script_name][$name] = $ary['version'];
 			}
 		}
 

@@ -47,14 +47,14 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
-		$sheet_names = $this->store->get_load_sheets($context['SCRIPT_NAME']);
+		$load_sheets = $this->store->get_load_sheets($context['SCRIPT_NAME']);
 		$sheets = [];
 
-		foreach ($sheet_names as $sheet_name)
+		foreach ($load_sheets as $sheet_name => $sheet_version)
 		{
 			$params = [
 				'name'		=> $sheet_name,
-				'v'			=> $this->store->get_sheet_version($sheet_name),	
+				'v'			=> $sheet_version,	
 			];
 
 			$sheets[] = $this->helper->route('marttiphpbb_extrastyle_render_controller', $params);

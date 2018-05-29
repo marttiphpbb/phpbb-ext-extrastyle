@@ -60,8 +60,7 @@ class main_module
 				if ($request->is_set_post('save'))
 				{
 					$sheet_name = $request->variable('sheet_name', '');
-					$sheet_content = utf8_normalize_nfc($request->variable('sheet_content', '', true));
-					$sheet_content = htmlspecialchars_decode($sheet_content);
+					$sheet_content = $request->variable('sheet_content', '', true);
 		
 					$script_names = $request->variable('script_names', '');
 					$script_names = strtolower($script_names);
@@ -70,8 +69,6 @@ class main_module
 					{
 						$script_names = str_replace([' ', '.php'], '', $script_names);
 						$store->set_sheet($sheet_name, crc32($sheet_content), $script_names, $sheet_content);			
-						$script_names = explode(',', $script_names);
-						$store->set_script_names($sheet_name, $script_names);
 						trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_SAVED'), $file) . adm_back_link($this->u_action . '&amp;filename=' . $file));
 					}
 
@@ -106,7 +103,7 @@ class main_module
 				parse_str(parse_url(html_entity_decode($this->u_action), PHP_URL_QUERY), $query);
 
 				$s_hidden_fields = [
-					'sheet_name'	=> $sheet_name,
+					'sheet_name'	=> $request_sheet_name,
 				];
 
 				$template->assign_vars([

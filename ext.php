@@ -8,6 +8,7 @@
 namespace marttiphpbb\extrastyle;
 
 use phpbb\extension\base;
+use marttiphpbb\extrastyle\service\store;
 
 class ext extends base
 {
@@ -18,5 +19,19 @@ class ext extends base
 	{
 		$config = $this->container->get('config');
 		return phpbb_version_compare($config['version'], '3.2', '>=') && version_compare(PHP_VERSION, '7', '>=');
+	}
+
+	public function enable_step($old_state)
+	{
+        if ($old_state === false)
+        {
+			$config_text = $this->container->get('config_text');
+			$cache = $this->container->get('cache.driver');
+			$store = new store($config_text, $cache);
+			$store->refresh_script_names();
+            return 'refreshed_script_names';
+        }
+
+        return parent::enable_step($old_state);		
 	}
 }
