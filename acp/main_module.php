@@ -60,8 +60,8 @@ class main_module
 				if ($request->is_set_post('save'))
 				{
 					$sheet_name = $request->variable('sheet_name', '');
-					$sheet_content = $request->variable('sheet_content', '', true);
-					$sheet_content = html_entity_decode($sheet_content, ENT_NOQUOTES | ENT_HTML5);	
+					$sheet_content = $request->variable('sheet_content', '');
+					$sheet_content = html_entity_decode($sheet_content, ENT_COMPAT | ENT_HTML5);	
 					$script_names = $request->variable('script_names', '');
 					$script_names = strtolower($script_names);
 
@@ -74,7 +74,7 @@ class main_module
 
 					$s_hidden_fields = [
 						'sheet_name'	=> $sheet_name,
-						'sheet_content' => $sheet_content,
+						'sheet_content' => htmlentities($sheet_content, ENT_COMPAT | ENT_HTML5),
 						'script_names'	=> $script_names,
 						'mode'			=> 'edit',
 						'save'			=> 1,
