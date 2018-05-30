@@ -61,7 +61,7 @@ class main_module
 				{
 					$sheet_name = $request->variable('sheet_name', '');
 					$sheet_content = $request->variable('sheet_content', '', true);
-		
+					$sheet_content = html_entity_decode($sheet_content, ENT_QUOTES | ENT_HTML5);	
 					$script_names = $request->variable('script_names', '');
 					$script_names = strtolower($script_names);
 
