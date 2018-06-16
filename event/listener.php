@@ -10,20 +10,13 @@ namespace marttiphpbb\extrastyle\event;
 use phpbb\event\data as event;
 use phpbb\controller\helper;
 use marttiphpbb\extrastyle\service\store;
-
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
 {
-	/** @var store */
 	protected $store;
-
-	/** @var helper */
 	protected $helper;
 
-	/**
-	 * @param store
-	*/
 	public function __construct(helper $helper, store $store)
 	{
 		$this->helper = $helper;
@@ -54,7 +47,7 @@ class listener implements EventSubscriberInterface
 		{
 			$params = [
 				'name'		=> $sheet_name,
-				'v'			=> $sheet_version,	
+				'v'			=> $sheet_version,
 			];
 
 			$sheets[] = $this->helper->route('marttiphpbb_extrastyle_render_controller', $params);
@@ -62,5 +55,5 @@ class listener implements EventSubscriberInterface
 
 		$context['marttiphpbb_extrastyle'] = $sheets;
 		$event['context'] = $context;
-	}		
+	}
 }

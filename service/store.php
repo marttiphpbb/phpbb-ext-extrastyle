@@ -17,19 +17,14 @@ class store
 	const KEY = cnst::ID;
 	const CACHE_KEY = '_' . self::KEY;
 
-	/** @var config_text */
-	private $config_text;
-
-	/** @var cache */
-	private $cache;
-	
-	/** @var array */
-	private $data = [];
+	protected $config_text;
+	protected $cache;
+	protected $data = [];
 
 	public function __construct(config_text $config_text, cache $cache)
 	{
-		$this->config_text = $config_text;	
-		$this->cache = $cache;		
+		$this->config_text = $config_text;
+		$this->cache = $cache;
 	}
 
 	private function load()
@@ -39,13 +34,13 @@ class store
 			return;
 		}
 
-		$this->data = $this->cache->get(self::CACHE_KEY);		
-		
+		$this->data = $this->cache->get(self::CACHE_KEY);
+
 		if ($this->data)
 		{
 			return;
 		}
-		
+
 		$data = $this->config_text->get(self::KEY);
 
 		if (!$data)
@@ -57,7 +52,7 @@ class store
 
 			return;
 		}
-	
+
 		$this->data = unserialize($data);
 		$this->cache->put(self::CACHE_KEY, $this->data);
 	}
@@ -90,7 +85,7 @@ class store
 		$this->refresh_script_names();
 	}
 
-	public function get_all_sheets():array 
+	public function get_all_sheets():array
 	{
 		$this->load();
 		return $this->data['sheets'];
@@ -98,7 +93,7 @@ class store
 
 	public function delete_sheet(string $name)
 	{
-		$this->load();	
+		$this->load();
 		unset($this->data['sheets'][$name]);
 		$this->refresh_script_names();
 	}
@@ -118,7 +113,7 @@ class store
 		foreach ($this->data['sheets'] as $name => $ary)
 		{
 			$script_names = explode(',', $ary['script_names']);
-	
+
 			foreach ($script_names as $script_name)
 			{
 				$this->data['load'][$script_name][$name] = $ary['version'];
