@@ -30,7 +30,7 @@ class main_module
 		switch($mode)
 		{
 			case 'edit':
-	
+
 				$this->tpl_name = 'edit';
 				$this->page_title = $language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_EDIT');
 
@@ -52,24 +52,24 @@ class main_module
 				if (!isset($sheets[$request_sheet_name]))
 				{
 					trigger_error($language->lang(
-						cnst::L_ACP . '_SHEET_DOES_NOT_EXIST', 
+						cnst::L_ACP . '_SHEET_DOES_NOT_EXIST',
 							$request_sheet_name),
-								E_USER_WARNING);					
+								E_USER_WARNING);
 				}
-				
+
 				if ($request->is_set_post('save'))
 				{
 					$sheet_name = $request->variable('sheet_name', '');
 					$sheet_content = $request->variable('sheet_content', '');
-					$sheet_content = html_entity_decode($sheet_content, ENT_COMPAT | ENT_HTML5);	
+					$sheet_content = html_entity_decode($sheet_content, ENT_COMPAT | ENT_HTML5);
 					$script_names = $request->variable('script_names', '');
 					$script_names = strtolower($script_names);
 
 					if (confirm_box(true))
 					{
 						$script_names = str_replace([' ', '.php'], '', $script_names);
-						$store->set_sheet($sheet_name, crc32($sheet_content), $script_names, $sheet_content);			
-						trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_SAVED'), $file) . adm_back_link($this->u_action . '&amp;filename=' . $file));
+						$store->set_sheet($sheet_name, crc32($sheet_content), $script_names, $sheet_content);
+						trigger_error(sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_SAVED'), $sheet_name) . adm_back_link($this->u_action . '&amp;sheet_name=' . $sheet_name));
 					}
 
 					$s_hidden_fields = [
@@ -88,11 +88,11 @@ class main_module
 					$template->assign_block_vars('sheets', [
 						'S_SELECTED'	=> $request_sheet_name === $sheet_name,
 						'NAME'			=> $sheet_name,
-					]);				
+					]);
 				}
 
 				$codemirror_enabled = $ext_manager->is_enabled('marttiphpbb/codemirror');
-		 
+
 				if ($codemirror_enabled)
 				{
 					$load = $phpbb_container->get('marttiphpbb.codemirror.load');
@@ -121,7 +121,7 @@ class main_module
 				$this->tpl_name = 'sheets';
 				$this->page_title = $language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEETS');
 
-				$sheets = $store->get_all_sheets(); 
+				$sheets = $store->get_all_sheets();
 
 				$new_sheet = $request->variable('new_sheet', '');
 				$sheet_to_delete = array_keys($request->variable('delete', array('' => '')));
@@ -137,26 +137,26 @@ class main_module
 					if (!$new_sheet)
 					{
 						trigger_error(
-							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_EMPTY') . 
-								adm_back_link($this->u_action), 
+							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_EMPTY') .
+								adm_back_link($this->u_action),
 									E_USER_WARNING);
 					}
 
 					if (in_array($new_sheet, array_keys($sheets)))
 					{
 						trigger_error(sprintf(
-							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_ALREADY_EXISTS'), 
-								$new_sheet) . 
+							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_ALREADY_EXISTS'),
+								$new_sheet) .
 									adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					if (preg_match('/^[a-z][a-z0-9-]*[a-z0-9]$/', $new_sheet) !== 1 
+					if (preg_match('/^[a-z][a-z0-9-]*[a-z0-9]$/', $new_sheet) !== 1
 						|| strpos($new_sheet, '--') !== false)
 					{
 						trigger_error(sprintf(
-							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_INVALID_FORMAT'), 
-								$new_sheet) . 
-									adm_back_link($this->u_action), E_USER_WARNING);						
+							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_NAME_INVALID_FORMAT'),
+								$new_sheet) .
+									adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
 					$store->set_sheet($new_sheet, crc32(''), '', '');
@@ -170,8 +170,8 @@ class main_module
 					if (!in_array($sheet_to_delete, array_keys($sheets)))
 					{
 						trigger_error(sprintf(
-							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DOES_NOT_EXIST'), 
-								$sheet_to_delete) . adm_back_link($this->u_action), 
+							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DOES_NOT_EXIST'),
+								$sheet_to_delete) . adm_back_link($this->u_action),
 									E_USER_WARNING);
 					}
 
@@ -180,7 +180,7 @@ class main_module
 						$store->delete_sheet($sheet_to_delete);
 
 						trigger_error(sprintf(
-							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DELETED'), 
+							$language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DELETED'),
 								$sheet_to_delete) . adm_back_link($this->u_action));
 					}
 
@@ -189,8 +189,8 @@ class main_module
 						'delete'	=> [$sheet_to_delete => 1],
 					];
 
-					confirm_box(false, 
-						sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DELETE_CONFIRM'), 
+					confirm_box(false,
+						sprintf($language->lang('ACP_MARTTIPHPBB_EXTRASTYLE_SHEET_DELETE_CONFIRM'),
 							$sheet_to_delete), build_hidden_fields($s_hidden_fields));
 				}
 
@@ -204,9 +204,9 @@ class main_module
 					]);
 				}
 
-			break;		
+			break;
 		}
 
-		$template->assign_var('U_ACTION', $this->u_action);		
+		$template->assign_var('U_ACTION', $this->u_action);
 	}
 }
