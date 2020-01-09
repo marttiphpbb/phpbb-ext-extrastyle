@@ -9,10 +9,6 @@
 namespace marttiphpbb\extrastyle\controller;
 
 use phpbb\request\request;
-use phpbb\template\twig\twig as template;
-use phpbb\user;
-use phpbb\language\language;
-use phpbb\controller\helper;
 use marttiphpbb\extrastyle\service\store;
 
 use Symfony\Component\HttpFoundation\Response;

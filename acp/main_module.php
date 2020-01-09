@@ -8,13 +8,12 @@
 namespace marttiphpbb\extrastyle\acp;
 
 use marttiphpbb\extrastyle\util\cnst;
-use marttiphpbb\extrastyle\model\extrastyle_directory;
 
 class main_module
 {
 	public $u_action;
 
-	function main($id, $mode)
+	function main($id, $mode):void
 	{
 		global $phpbb_container;
 

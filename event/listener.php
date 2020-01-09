@@ -17,7 +17,7 @@ class listener implements EventSubscriberInterface
 	protected $store;
 	protected $helper;
 
-	public function __construct(helper $helper, store $store)
+	public function __construct(helper $helper, store $store):void
 	{
 		$this->helper = $helper;
 		$this->store = $store;

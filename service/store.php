@@ -27,7 +27,7 @@ class store
 		$this->cache = $cache;
 	}
 
-	private function load()
+	private function load():void
 	{
 		if ($this->data)
 		{
@@ -57,7 +57,7 @@ class store
 		$this->cache->put(self::CACHE_KEY, $this->data);
 	}
 
-	private function write()
+	private function write():void
 	{
 		$this->config_text->set(self::KEY, serialize($this->data));
 		$this->cache->put(self::CACHE_KEY, $this->data);
@@ -74,7 +74,12 @@ class store
 		return  '';
 	}
 
-	public function set_sheet(string $name, string $version, string $script_names, string $content)
+	public function set_sheet(
+		string $name,
+		string $version,
+		string $script_names,
+		string $content
+	):void
 	{
 		$this->load();
 		$this->data['sheets'][$name] = [
@@ -91,7 +96,7 @@ class store
 		return $this->data['sheets'];
 	}
 
-	public function delete_sheet(string $name)
+	public function delete_sheet(string $name):void
 	{
 		$this->load();
 		unset($this->data['sheets'][$name]);
@@ -104,7 +109,7 @@ class store
 		return $this->data['load'][$script_name] ?? [];
 	}
 
-	public function refresh_script_names()
+	public function refresh_script_names():void
 	{
 		$this->load();
 
