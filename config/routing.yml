@@ -1,5 +1,5 @@
 marttiphpbb_extrastyle_render_controller:
-    pattern: /extrastyle/{name}__css
+    path: /extrastyle/{name}__css
     defaults: { _controller: marttiphpbb.extrastyle.controller:render }
     requirements:
         _method: GET
