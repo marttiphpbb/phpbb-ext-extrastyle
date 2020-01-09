@@ -4,14 +4,14 @@
 
 ## Requirements
 
-* phpBB 3.2.1+
-* PHP 7+
+* phpBB 3.3+
+* PHP 7.1+
 * the extension [marttiphpbb/codemirror](https://github.com/marttiphpbb/phpbb-ext-codemirror)
 
 ## Features
 
-With this extension you can define extra (small) style sheets. 
-This can come in handy to style content that extensions add to the 
+With this extension you can define extra (small) style sheets.
+This can come in handy to style content that extensions add to the
 board.
 
 ## Quick Install
