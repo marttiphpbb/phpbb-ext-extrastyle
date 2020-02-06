@@ -17,13 +17,13 @@ class listener implements EventSubscriberInterface
 	protected $store;
 	protected $helper;
 
-	public function __construct(helper $helper, store $store):void
+	public function __construct(helper $helper, store $store)
 	{
 		$this->helper = $helper;
 		$this->store = $store;
 	}
 
-	static public function getSubscribedEvents()
+	static public function getSubscribedEvents():array
 	{
 		return [
 			'core.twig_environment_render_template_before'
@@ -31,7 +31,7 @@ class listener implements EventSubscriberInterface
 		];
 	}
 
-	public function core_twig_environment_render_template_before(event $event)
+	public function core_twig_environment_render_template_before(event $event):void
 	{
 		$context = $event['context'];
 

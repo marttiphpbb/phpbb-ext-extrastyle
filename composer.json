@@ -3,9 +3,9 @@
 	"type": "phpbb-extension",
 	"description": "Extra Style Extension for phpBB 3.3",
 	"homepage": "https://github.com/marttiphpbb/phpbb-ext-extrastyle",
-	"version": "0.2.0",
-	"time": "2020-01-09",
-	"license": "GPL-2.0",
+	"version": "0.3.0",
+	"time": "2020-02-06",
+	"license": "GPL-2.0-only",
 	"authors": [{
 			"name": "martti",
 			"email": "info@martti.be",
